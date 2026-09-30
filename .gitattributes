@@ -1,0 +1,51 @@
+# ─────────────────────────────────────────────────────────────
+#  跨平台换行与编码规范
+# ─────────────────────────────────────────────────────────────
+
+# 让 git 在输出里直接显示中文文件名，而不是 \351\203\250 这种八进制转义。
+# 不加这行，`git status` 和 `git ls-files` 里的中文名完全没法读。
+* text=auto
+
+# 源码统一用 LF 存储。Windows 检出时 git 会自动转 CRLF，
+# 但版本库里的字节始终一致，避免「同一文件在两人机器上 diff 满屏」。
+*.mjs   text eol=lf
+*.js    text eol=lf
+*.vue   text eol=lf
+*.css   text eol=lf
+*.html  text eol=lf
+*.json  text eol=lf
+*.md    text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+
+# Windows 批处理必须用 CRLF，否则 cmd 解析会出问题
+*.bat   text eol=crlf
+*.cmd   text eol=crlf
+
+# Shell 脚本必须用 LF，否则在 Linux 上会报「bad interpreter」
+*.sh    text eol=lf
+
+# ─────────────────────────────────────────────────────────────
+#  二进制文件：禁止 git 做任何转换
+# ─────────────────────────────────────────────────────────────
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.webp  binary
+*.ico   binary
+*.svg   text
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.eot   binary
+
+# ─────────────────────────────────────────────────────────────
+#  语言与 diff 行为
+# ─────────────────────────────────────────────────────────────
+
+# 标记生成文件：GitHub 会在 diff 里折叠它们
+package-lock.json  linguist-generated=true -diff
+
+# 文档语言标注（影响 GitHub 的语言统计，避免把中文文档算错）
+*.md  linguist-documentation

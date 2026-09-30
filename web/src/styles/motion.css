@@ -1,0 +1,212 @@
+/**
+ * 全局动效样式。
+ *
+ * 统一时长与缓动，避免每个组件各写一套导致节奏不一致。
+ * 所有动效在 prefers-reduced-motion 下自动关闭。
+ */
+
+:root {
+  --ease-out: cubic-bezier(.22, .9, .3, 1);
+  --ease-spring: cubic-bezier(.34, 1.32, .5, 1);
+  --dur-fast: 140ms;
+  --dur-base: 220ms;
+  --dur-slow: 420ms;
+}
+
+/* ── 滚动揭示 ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out);
+  will-change: opacity, transform;
+}
+
+.reveal.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── 通用入场 ── */
+@keyframes dsh-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes dsh-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes dsh-pop {
+  from { opacity: 0; transform: scale(.92); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes dsh-slide-right {
+  from { opacity: 0; transform: translateX(-12px); }
+  to { opacity: 1; transform: none; }
+}
+
+.anim-rise { animation: dsh-rise var(--dur-slow) var(--ease-out) both; }
+.anim-fade { animation: dsh-fade var(--dur-base) ease-out both; }
+.anim-pop { animation: dsh-pop var(--dur-base) var(--ease-spring) both; }
+
+/* ── 页面首屏：内容分层次浮现 ── */
+.hero-enter > * {
+  animation: dsh-rise 520ms var(--ease-out) both;
+}
+
+.hero-enter > *:nth-child(1) { animation-delay: 40ms; }
+.hero-enter > *:nth-child(2) { animation-delay: 110ms; }
+.hero-enter > *:nth-child(3) { animation-delay: 180ms; }
+.hero-enter > *:nth-child(4) { animation-delay: 240ms; }
+
+/* ── 背景渐变流动：极慢，只在首屏可见，不干扰阅读 ── */
+.aurora {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(52% 42% at 18% 8%, rgba(47, 107, 255, .07), transparent 62%),
+    radial-gradient(46% 38% at 84% 4%, rgba(120, 90, 255, .06), transparent 64%);
+  background-size: 180% 180%, 180% 180%;
+  animation: aurora-drift 26s ease-in-out infinite alternate;
+}
+
+@keyframes aurora-drift {
+  from { background-position: 0% 0%, 100% 0%; }
+  to { background-position: 40% 30%, 60% 20%; }
+}
+
+/* ── 点击涟漪 ── */
+.ripple-host {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .18;
+  transform: scale(0);
+  pointer-events: none;
+  animation: ripple-out 520ms var(--ease-out) forwards;
+}
+
+@keyframes ripple-out {
+  to { transform: scale(2.6); opacity: 0; }
+}
+
+/* ── 按钮悬停抬升与按压 ── */
+.btn {
+  transition:
+    background-color var(--dur-fast) ease,
+    border-color var(--dur-fast) ease,
+    box-shadow var(--dur-base) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(0) scale(.985);
+}
+
+.btn-primary:hover:not(:disabled) {
+  box-shadow: 0 4px 14px rgba(47, 107, 255, .28);
+}
+
+/* ── 输入框聚焦时的柔光 ── */
+input, textarea, select {
+  transition:
+    border-color var(--dur-fast) ease,
+    box-shadow var(--dur-base) var(--ease-out),
+    background-color var(--dur-fast) ease;
+}
+
+/* ── 卡片悬停 ── */
+.lift {
+  transition:
+    box-shadow var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) ease;
+}
+
+.lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(16, 24, 40, .09), 0 2px 6px rgba(16, 24, 40, .05);
+}
+
+/* ── 骨架屏 ── */
+@keyframes dsh-shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #f1f3f6 25%, #fafbfc 50%, #f1f3f6 75%);
+  background-size: 200% 100%;
+  animation: dsh-shimmer 1.4s ease-in-out infinite;
+}
+
+/* ── 进度条式下划线（导航、页签）── */
+@keyframes dsh-underline {
+  from { transform: scaleX(.35); opacity: .35; }
+  to { transform: scaleX(1); opacity: 1; }
+}
+
+/* ── 状态切换时的轻微强调 ── */
+@keyframes dsh-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(47, 107, 255, .32); }
+  70% { box-shadow: 0 0 0 8px rgba(47, 107, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(47, 107, 255, 0); }
+}
+
+.pulse { animation: dsh-pulse 1.1s var(--ease-out); }
+
+/* ── 加载转圈 ── */
+@keyframes dsh-spin { to { transform: rotate(360deg); } }
+
+/* ── 视图过渡（步骤切换 / 页签切换）── */
+.view-enter-active {
+  transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
+}
+.view-leave-active {
+  transition: opacity var(--dur-fast) ease-in, transform var(--dur-fast) ease-in;
+}
+.view-enter-from { opacity: 0; transform: translateY(10px); }
+.view-leave-to { opacity: 0; transform: translateY(-6px); }
+
+/* 列表项逐个入场 */
+.stagger-enter-active {
+  transition: opacity 300ms var(--ease-out), transform 300ms var(--ease-out);
+}
+
+/* ── 无障碍：用户要求减少动效时全部关闭 ── */
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .hero-enter > *,
+  .aurora,
+  .ripple,
+  .anim-rise,
+  .anim-fade,
+  .anim-pop,
+  .shimmer,
+  .pulse {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .btn:hover:not(:disabled),
+  .lift:hover {
+    transform: none !important;
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "name": "dsh-bonus-web",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "description": "DSH 体验赠金自助领取站：Vue 3 + reka-ui 前台、管理后台、Node 后端、激活码准入",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "node --no-warnings=ExperimentalWarning server/index.mjs",
+
+    "test": "npm run test:unit && npm run test:stress && npm run test:security && npm run test:privacy",
+    "test:unit": "node tests/contract.mjs && node tests/client-ip.mjs && node tests/server.mjs && node tests/concurrent.mjs && node tests/admin.mjs",
+    "test:stress": "node tests/stress.mjs",
+    "test:security": "node tests/security.mjs",
+    "test:privacy": "node tests/privacy.mjs",
+
+    "test:contract": "node tests/contract.mjs",
+    "test:ip": "node tests/client-ip.mjs",
+    "test:server": "node tests/server.mjs",
+    "test:concurrent": "node tests/concurrent.mjs",
+    "test:admin": "node tests/admin.mjs",
+
+    "test:account": "node tests/account.mjs",
+    "visual": "node tests/visual.mjs",
+    "codes": "node tools/codes.mjs"
+  },
+  "dependencies": {
+    "reka-ui": "^2.10.5",
+    "vue": "^3.5.43"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.9",
+    "vite": "^8.3.1"
+  }
+}

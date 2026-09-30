@@ -1,0 +1,434 @@
+/**
+ * 设计令牌与基础样式。
+ *
+ * 设计取向：干净的现代 Web 应用，不是文档页。
+ *   - 用「浅灰底 + 纯白卡片 + 极淡阴影」建立层次，而不是靠一堆同权重边框
+ *   - 字号/字重拉开层级：标题重、正文常规、辅助信息轻且小
+ *   - 只有一个强调色，用于主操作与当前状态
+ *   - 圆角 10-12px，符合现代观感
+ */
+:root {
+  /* 中性色 */
+  --c-bg: #f6f7f9;
+  --c-surface: #ffffff;
+  --c-surface-2: #fafbfc;
+  --c-border: #e8eaed;
+  --c-border-strong: #d8dce1;
+  --c-text: #16181c;
+  --c-text-2: #4b5563;
+  --c-text-3: #8b929e;
+
+  /* 强调色 */
+  --c-accent: #2f6bff;
+  --c-accent-hover: #1f57e6;
+  --c-accent-soft: #eef3ff;
+  --c-accent-border: #c9daff;
+
+  /* 语义色 */
+  --c-success: #0f7b43;
+  --c-success-soft: #ecfdf3;
+  --c-success-border: #b7ebcb;
+  --c-warn: #a15c07;
+  --c-warn-soft: #fff8eb;
+  --c-warn-border: #fbe0a8;
+  --c-danger: #c02626;
+  --c-danger-soft: #fef2f2;
+  --c-danger-border: #fbd0d0;
+
+  /* 圆角 */
+  --r-sm: 6px;
+  --r: 10px;
+  --r-lg: 14px;
+
+  /* 阴影：极淡，只用来托起卡片 */
+  --shadow-xs: 0 1px 2px rgba(16, 24, 40, 0.04);
+  --shadow-sm: 0 1px 3px rgba(16, 24, 40, 0.06), 0 1px 2px rgba(16, 24, 40, 0.04);
+  --shadow-md: 0 4px 12px rgba(16, 24, 40, 0.07), 0 1px 3px rgba(16, 24, 40, 0.05);
+  --shadow-lg: 0 12px 32px rgba(16, 24, 40, 0.12), 0 2px 8px rgba(16, 24, 40, 0.06);
+
+  /* 字体 */
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* 字号层级 */
+  --fs-display: 30px;
+  --fs-h1: 22px;
+  --fs-h2: 17px;
+  --fs-body: 15px;
+  --fs-sm: 13.5px;
+  --fs-xs: 12.5px;
+
+  --page-max: 680px;
+  --page-max-wide: 1200px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --fs-display: 38px;
+    --fs-h1: 25px;
+    --fs-h2: 18px;
+    --fs-body: 15.5px;
+    --fs-sm: 14px;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--c-bg);
+  color: var(--c-text);
+  font: var(--fs-body) / 1.65 var(--font);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── 布局 ── */
+
+.page {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: 0 16px calc(56px + env(safe-area-inset-bottom));
+}
+
+.page-wide {
+  max-width: var(--page-max-wide);
+}
+
+@media (min-width: 768px) {
+  .page {
+    padding: 0 24px 72px;
+  }
+}
+
+/* ── 排版 ── */
+
+h1, h2, h3 {
+  margin: 0;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+}
+
+h1 { font-size: var(--fs-h1); font-weight: 650; }
+h2 { font-size: var(--fs-h2); font-weight: 620; }
+h3 { font-size: var(--fs-body); font-weight: 600; }
+
+p { margin: 0; }
+
+.text-2 { color: var(--c-text-2); }
+.text-3 { color: var(--c-text-3); font-size: var(--fs-sm); }
+
+code {
+  padding: 1.5px 5px;
+  border-radius: var(--r-sm);
+  background: #eef0f3;
+  font: 0.87em/1.5 var(--font-mono);
+  color: #374151;
+  word-break: break-all;
+}
+
+/* ── 卡片 ── */
+
+.card {
+  padding: 20px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-lg);
+  background: var(--c-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+@media (min-width: 768px) {
+  .card {
+    padding: 24px;
+  }
+}
+
+.card-flush {
+  padding: 0;
+  overflow: hidden;
+}
+
+/* ── 按钮 ── */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 42px;
+  padding: 0 18px;
+  border: 1px solid var(--c-border-strong);
+  border-radius: var(--r);
+  background: var(--c-surface);
+  color: var(--c-text);
+  font: 550 var(--fs-body) / 1 var(--font);
+  box-shadow: var(--shadow-xs);
+  cursor: pointer;
+  transition: background-color .14s, border-color .14s, box-shadow .14s, transform .08s;
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--c-surface-2);
+  border-color: #c8cdd4;
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(0.5px);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 2px;
+}
+
+.btn:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-primary {
+  border-color: transparent;
+  background: var(--c-accent);
+  color: #fff;
+  box-shadow: 0 1px 2px rgba(47, 107, 255, .3), 0 2px 8px rgba(47, 107, 255, .18);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--c-accent-hover);
+  border-color: transparent;
+}
+
+.btn-block { width: 100%; }
+.btn-sm { min-height: 34px; padding: 0 13px; font-size: var(--fs-sm); }
+
+.btn-danger {
+  border-color: var(--c-danger-border);
+  background: var(--c-danger-soft);
+  color: var(--c-danger);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: #fde8e8;
+  border-color: #f5bcbc;
+}
+
+/* ── 表单 ── */
+
+input[type='text'],
+input[type='password'],
+input[type='number'],
+textarea,
+select {
+  width: 100%;
+  padding: 10px 13px;
+  border: 1px solid var(--c-border-strong);
+  border-radius: var(--r);
+  background: var(--c-surface);
+  color: var(--c-text);
+  font: var(--fs-body) / 1.5 var(--font);
+  transition: border-color .14s, box-shadow .14s;
+  -webkit-appearance: none;
+}
+
+/* iOS 上字号小于 16px 会触发自动放大 */
+@media (max-width: 767px) {
+  input[type='text'],
+  input[type='password'],
+  input[type='number'],
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--c-accent);
+  box-shadow: 0 0 0 3px var(--c-accent-soft);
+}
+
+input:disabled,
+textarea:disabled,
+select:disabled {
+  background: #f3f4f6;
+  color: var(--c-text-3);
+}
+
+::placeholder { color: #a8aeb8; }
+
+/* ── 标签 ── */
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--c-border);
+  background: #f3f4f6;
+  color: var(--c-text-2);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.tag-ok { border-color: var(--c-success-border); background: var(--c-success-soft); color: var(--c-success); }
+.tag-warn { border-color: var(--c-warn-border); background: var(--c-warn-soft); color: var(--c-warn); }
+.tag-bad { border-color: var(--c-danger-border); background: var(--c-danger-soft); color: var(--c-danger); }
+.tag-accent { border-color: var(--c-accent-border); background: var(--c-accent-soft); color: var(--c-accent); }
+
+/* ── 表格 ── */
+
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--c-border);
+  border-radius: var(--r);
+  background: var(--c-surface);
+  /* 移动端横向滚动时避免把父容器撑宽 */
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+}
+
+.table th,
+.table td {
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--c-border);
+  white-space: nowrap;
+}
+
+.table th {
+  background: var(--c-surface-2);
+  font-weight: 550;
+  color: var(--c-text-3);
+  font-size: var(--fs-xs);
+  letter-spacing: .02em;
+}
+
+.table tbody tr:last-child td { border-bottom: 0; }
+.table tbody tr:hover { background: var(--c-surface-2); }
+
+/**
+ * 窄屏下的卡片式表格。
+ *
+ * 后台表格动辄 7-8 列，横向滚动在中小屏上根本没法用：
+ * 用户看不到自己在哪一行，也对不上字段名。
+ * 这里把每一行变成一张卡片，用 td 的 data-label 补上字段名。
+ *
+ * 断点取 900px 而不是 767px：7 列表格在 768-900 这段仍然放不下，
+ * 会撑破容器导致页面横向溢出（实测 768px 下溢出到 799px）。
+ * 宁可早点切成卡片，也不要让用户横向滚。
+ *
+ * 用法：给 <table> 加 class="table-cards"，给每个 <td> 加 data-label="字段名"。
+ */
+@media (max-width: 900px) {
+  .table-cards {
+    display: block;
+  }
+
+  .table-cards thead {
+    /* 表头在卡片模式下没有意义（每张卡片自带字段名） */
+    display: none;
+  }
+
+  .table-cards tbody,
+  .table-cards tr,
+  .table-cards td {
+    display: block;
+    width: 100%;
+  }
+
+  .table-cards tr {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--c-border);
+  }
+
+  .table-cards tr:last-child {
+    border-bottom: 0;
+  }
+
+  .table-cards td {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 5px 0;
+    border: 0;
+    /* 长内容（URL、UUID、激活码）允许换行，否则会撑破卡片 */
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  /* 字段名由 data-label 提供 */
+  .table-cards td[data-label]::before {
+    content: attr(data-label);
+    flex: none;
+    min-width: 4.5em;
+    color: var(--c-text-3);
+    font-size: var(--fs-xs);
+  }
+
+  /* 勾选列单独一行放最上面，不要字段名 */
+  .table-cards td.c-check {
+    justify-content: flex-start;
+    padding-bottom: 8px;
+  }
+
+  .table-cards td.c-check::before {
+    content: '选择';
+    flex: none;
+    min-width: 4.5em;
+    color: var(--c-text-3);
+    font-size: var(--fs-xs);
+  }
+
+  /* 操作按钮铺满，手指好点 */
+  .table-cards td.c-act {
+    justify-content: stretch;
+    padding-top: 10px;
+  }
+
+  .table-cards td.c-act::before {
+    display: none;
+  }
+
+  .table-cards td.c-act .btn {
+    width: 100%;
+  }
+}
+
+.mono { font-family: var(--font-mono); }
+.nowrap { white-space: nowrap; }
+
+/* ── 工具 ── */
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
